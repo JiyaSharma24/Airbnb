@@ -19,7 +19,7 @@ const  flash= require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User= require("./models/user");
-const { resolve6 } = require('dns');
+
 const dburl = process.env.ATLAS_DB;
 main()
 .then(()=>{
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname,"/public")));
 const store=MongoStore.create({
     mongoUrl:dburl,
     crypto: {
-    secret: "mysupersecretcode",
+    secret: process.env.SECRET,
   },
   touchAfter:24*3600,
 });
@@ -50,7 +50,7 @@ store.on("error",()=>{
 })
 const sessionOption ={
     store,
-    secret:"mysupersecretcode",
+    secret:process.env.SECRET,
     resave:false,
     saveUninitialized: true,
     cookie:{
@@ -91,8 +91,7 @@ app.get("/",(req,res)=>{
 
   
  
-
-app.listen(3008, ()=>{
-    console.log(" server is listening to port 3008");
-
-} );   
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
